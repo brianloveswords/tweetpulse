@@ -6,7 +6,7 @@ var TwitterNode = require('twitter-node').TwitterNode,
 var twit = new TwitterNode({
   user: settings.username,
   password: settings.password,
-  track: settings.track,
+  track: settings.track
 })
 
 winston.add(winston.transports.File, { filename: 'dml-tweets.log' });

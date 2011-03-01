@@ -8,7 +8,8 @@
       "url": "http://github.com/brianlovesdata/dmlgame.git" 
   },
   "dependencies": {
-    "winston": ">= 0.2.3"
+    "winston": ">= 0.2.3",
+    "mongodb": ">= 0.9.1"
   },
   "engines": { "node": ">= 0.4.0" }
 }
