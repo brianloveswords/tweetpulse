@@ -1,0 +1,14 @@
+{
+  "name": "dmlgame",
+  "description": "A monitor for watching hashtags from the DML conference",
+  "version": "0.1.0",
+  "author": "Brian Brennan <brianloveswords@gmail.com>",
+  "repository": {
+      "type": "git",
+      "url": "http://github.com/brianlovesdata/dmlgame.git" 
+  },
+  "dependencies": {
+    "winston": ">= 0.2.3"
+  },
+  "engines": { "node": ">= 0.4.0" }
+}
