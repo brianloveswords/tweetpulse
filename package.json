@@ -9,7 +9,10 @@
   },
   "dependencies": {
     "winston": ">= 0.2.3",
-    "mongodb": ">= 0.9.1"
+    "mongodb": ">= 0.9.1",
+    "express": ">= 1.0.7",
+    "connect": "0.5.10",
+    "jade": "0.6.3"
   },
   "engines": { "node": ">= 0.4.0" }
 }
