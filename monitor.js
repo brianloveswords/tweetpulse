@@ -52,6 +52,7 @@ db.open(function(err, client){
         });
       });
     }
+    
     var user_entry = {'screen_name': user, 'tweet' : {'text': text, 'tags': tags }};
     user_col.insert(user_entry, function(err, docs){
       if (err) console.dir(err);

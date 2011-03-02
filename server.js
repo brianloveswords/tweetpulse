@@ -11,13 +11,14 @@ app.get('/', function(req, res){
 
 app.get('/users', function(req, res){
   tweetData.getUsers(function(users){
-    res.render('users', {locals: {users: users }});
+    console.dir(users);
+    return res.render('users', {locals: {users: users }});
   })
 });
 
 app.get('/tags', function(req, res){
   tweetData.getTags(function(tags){
-    res.render('users', {locals: {users: tags }});
+    return res.render('users', {locals: {users: tags }});
   })
 });
 
