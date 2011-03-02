@@ -14,6 +14,12 @@ app.get('/users', function(req, res){
     return res.render('users', {locals: {users: users }});
   })
 });
+app.get('/user/:id', function(req, res){
+  var user = req.params.id;
+  tweetData.getUser(user, function(user){
+    return res.render('user', {locals: {user: user }});
+  });
+});
 
 app.get('/tags', function(req, res){
   tweetData.getTags(function(tags){

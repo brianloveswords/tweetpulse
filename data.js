@@ -3,11 +3,11 @@ var sys = require('sys'),
     // local vars
     db = new mongo.Db('pulse', new mongo.Server('127.0.0.1', '27017', {}));
 
-var getAllFromCollection = function(collection, callback, post_process) {
+var getFromCollection = function(collection, term, callback, post_process) {
   post_process = (post_process || function(r){return r});
   db.open(function(){
     db.collection(collection, function(err, collection){
-      collection.find({}, function(err, cursor){
+      collection.find(term, function(err, cursor){
         cursor.toArray(function(err, results){
           callback(post_process(results));
           db.close();
@@ -19,7 +19,7 @@ var getAllFromCollection = function(collection, callback, post_process) {
 
 var getUsers = function(callback) {
   /* this is really inefficient, I need to make a better document structure */
-  getAllFromCollection('user', callback, function(users){
+  getFromCollection('user', {}, callback, function(users){
     var tweetMap = {};
     var userArr = [];
     users.forEach(function(user){
@@ -38,8 +38,19 @@ var getUsers = function(callback) {
   });
 };
 
+var getUser = function(name, callback){
+  getFromCollection('user', {screen_name: name}, callback, function(userTweets){
+    return {
+      screen_name: name,
+      tweets: userTweets.map(function(userTweet){
+        return userTweet.tweet
+      })
+    }
+  });
+}
+
 var getTags = function(callback){
-  getAllFromCollection('hashtag', callback, function(tags){
+  getFromCollection('hashtag', {}, callback, function(tags){
   /* this is really inefficient, I need to make a better document structure */
     var tweetMap = {};
     var tagArr = [];
@@ -61,4 +72,4 @@ var getTags = function(callback){
 
 exports.getTags = getTags;
 exports.getUsers = getUsers;
-
+exports.getUser = getUser;

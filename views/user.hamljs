@@ -1,0 +1,6 @@
+%h1= user.screen_name
+%h2= "Total tweets: " + user.tweets.length
+
+%ul
+  - each tweet in user.tweets 
+    %li= tweet.text
