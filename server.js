@@ -26,19 +26,10 @@ app.get('/user/:id', function(req, res){
           if (userTags.indexOf(tag) === -1) userTags.push(tag);
         })
       })
-      
-      console.dir(userTags);
-      // user -> {screen_name: name, tweets: [...]}
       return res.render('user', {locals: {user: user , tagsUsed: userTags, tagList: plainTags }});
     });
   });
 });
-
-/*
-  compare tags.tag to 
-*/
-
-
 
 app.get('/tags', function(req, res){
   tweetData.getTags(function(tags){
