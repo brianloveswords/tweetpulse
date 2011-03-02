@@ -9,8 +9,8 @@ var getFromCollection = function(collection, term, callback, post_process) {
     db.collection(collection, function(err, collection){
       collection.find(term, function(err, cursor){
         cursor.toArray(function(err, results){
+          db.close(); // close the connection before calling back
           callback(post_process(results));
-          db.close();
         })
       })
     })
