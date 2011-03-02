@@ -69,7 +69,18 @@ var getTags = function(callback){
     });
   });
 }
+var getTag = function(name, callback){
+  getFromCollection('hashtag', {tag: name}, callback, function(tagTweets){
+    return {
+      tag: name,
+      tweets: tagTweets.map(function(tagTweet){
+        return tagTweet.tweet
+      })
+    }
+  })
+}
 
 exports.getTags = getTags;
+exports.getTag = getTag;
 exports.getUsers = getUsers;
 exports.getUser = getUser;

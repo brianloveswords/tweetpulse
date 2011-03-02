@@ -1,0 +1,7 @@
+%h1= tag.tag
+%h2= "Total tweets: " + tag.tweets.length
+%ul
+  - each tweet in tag.tweets
+    %li
+      %a{ href: '/user/' + tweet.screen_name }='@' + tweet.screen_name
+      =': ' + tweet.text

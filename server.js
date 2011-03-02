@@ -45,6 +45,12 @@ app.get('/tags', function(req, res){
     return res.render('tags', {locals: {tags: tags }});
   })
 });
+app.get('/tag/:id', function(req, res){
+  var tagname = req.params.id;
+  tweetData.getTag(tagname, function(tag){
+    return res.render('tag', {locals: {tag: tag }});
+  });
+});
 
 sys.puts('listening on port 3000');
 app.listen(3000);
