@@ -1,6 +1,12 @@
 %h1= user.screen_name
 %h2= "Total tweets: " + user.tweets.length
-
+%h3= "Tags used: " + tagsUsed.length + " out of " + tagList.length
 %ul
-  - each tweet in user.tweets 
+  - each tag in tagsUsed
+    %li
+      %a{ href: '/tag/' + tag }= tag
+
+%h3= "Tweets"
+%ul
+  - each tweet in user.tweets
     %li= tweet.text
