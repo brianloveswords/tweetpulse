@@ -35,27 +35,27 @@ db.open(function(err, client){
   };
   
   var tweet_parser = function(tweet) {
-    // get current user ...
     var user = tweet.user.screen_name;
-    
-    // ...but get tags and text from original tweeter
-    if (tweet.retweeted_status) {
-      tweet = tweet.retweeted_status
-    }
-    
     var tags = getHashtagsFromTweet(tweet);
-    var text = tweet.text;
+    var text = '';
+    if (tweet.retweeted_status) {
+      text = tweet.retweeted_status.text;
+    } else {
+      text = tweet.text;
+    }
 
     if (tags.length > 0) {
       tags.forEach(function(tag){
         var tag_entry = {'tag' : tag, 'tweet' : {'user': user, 'tweet': text } };
-        // ignore errors for now
-        hash_col.insert(tag_entry, function(err, docs){});
+        hash_col.insert(tag_entry, function(err, docs){
+          if (err) console.dir(err);
+        });
       });
     }
     var user_entry = {'user': user, 'tweet' : {'text': text, 'tags': tags }};
-    // ignore errors for now
-    user_col.insert(user_entry, function(err, docs){});
+    user_col.insert(user_entry, function(err, docs){
+      if (err) console.dir(err);
+    });
   }
   
   // setup stuff
@@ -70,6 +70,7 @@ db.open(function(err, client){
     continue_execution();
   });
   var prepare_stream_watcher = (function () {
+    winston.add(winston.transports.File, {filename: 'status.log'});
     twit.headers['User-Agent'] = 'DML Game Follower';
     twit.addListener('error', function(error){
       winston.error(error.message);
