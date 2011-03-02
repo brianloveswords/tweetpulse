@@ -12,7 +12,7 @@
     "mongodb": ">= 0.9.1",
     "express": ">= 1.0.7",
     "connect": "0.5.10",
-    "jade": "0.6.3"
+    "hamljs": "0.4.5"
   },
   "engines": { "node": ">= 0.4.0" }
 }
