@@ -46,13 +46,13 @@ db.open(function(err, client){
 
     if (tags.length > 0) {
       tags.forEach(function(tag){
-        var tag_entry = {'tag' : tag, 'tweet' : {'user': user, 'tweet': text } };
+        var tag_entry = {'tag' : tag, 'tweet' : {'screen_name': user, 'tweet': text } };
         hash_col.insert(tag_entry, function(err, docs){
           if (err) console.dir(err);
         });
       });
     }
-    var user_entry = {'user': user, 'tweet' : {'text': text, 'tags': tags }};
+    var user_entry = {'screen_name': user, 'tweet' : {'text': text, 'tags': tags }};
     user_col.insert(user_entry, function(err, docs){
       if (err) console.dir(err);
     });
