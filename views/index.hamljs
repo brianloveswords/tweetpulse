@@ -1,0 +1,7 @@
+%ul
+  %li
+    %a{ href: '/tags' }
+      Tags
+  %li
+    %a{ href: '/users' }
+      Users
