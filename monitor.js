@@ -46,7 +46,7 @@ db.open(function(err, client){
 
     if (tags.length > 0) {
       tags.forEach(function(tag){
-        var tag_entry = {'tag' : tag, 'tweet' : {'screen_name': user, 'tweet': text } };
+        var tag_entry = {'tag' : tag, 'tweet' : {'screen_name': user, 'text': text } };
         hash_col.insert(tag_entry, function(err, docs){
           if (err) console.dir(err);
         });

@@ -1,1 +1,3 @@
-tags
+%ul 
+  - each tag in tags
+    %li= tag.tag + ' (' + tag.tweets.length + ')'

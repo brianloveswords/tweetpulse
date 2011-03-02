@@ -1,7 +1,7 @@
 var app = require('express').createServer(),
     sys = require('sys'),
     haml = require('hamljs'),
-    tweetData = require('./data.js');
+    tweetData = require('./data');
 
 app.set('view engine', 'hamljs');
 
@@ -11,14 +11,13 @@ app.get('/', function(req, res){
 
 app.get('/users', function(req, res){
   tweetData.getUsers(function(users){
-    console.dir(users);
     return res.render('users', {locals: {users: users }});
   })
 });
 
 app.get('/tags', function(req, res){
   tweetData.getTags(function(tags){
-    return res.render('users', {locals: {users: tags }});
+    return res.render('tags', {locals: {tags: tags }});
   })
 });
 

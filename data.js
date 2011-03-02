@@ -29,11 +29,9 @@ var getUsers = function(callback) {
       }
       userTweets.push(user.tweet);
     });
-    
     for (user in tweetMap) {
       userArr.push({screen_name: user, tweets: tweetMap[user]});
     }
-    console.dir(userArr);
     return userArr.sort(function(a,b){
       return b.tweets.length - a.tweets.length;
     });
@@ -41,7 +39,24 @@ var getUsers = function(callback) {
 };
 
 var getTags = function(callback){
-  getAllFromCollection('hashtag', callback);
+  getAllFromCollection('hashtag', callback, function(tags){
+  /* this is really inefficient, I need to make a better document structure */
+    var tweetMap = {};
+    var tagArr = [];
+    tags.forEach(function(tag){
+      var tagTweets = tweetMap[tag.tag];
+      if (!tagTweets) {
+        tagTweets = tweetMap[tag.tag] = [];
+      }
+      tagTweets.push(tag.tweet);
+    });
+    for (tag in tweetMap) {
+      tagArr.push({tag: tag, tweets: tweetMap[tag]});
+    }
+    return tagArr.sort(function(a,b){
+      return b.tweets.length - a.tweets.length;
+    });
+  });
 }
 
 exports.getTags = getTags;
