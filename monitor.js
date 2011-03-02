@@ -57,7 +57,7 @@ db.open(function(err, client){
     user_col.insert(user_entry, function(err, docs){
       if (err) console.dir(err);
     });
-  }
+  };
   
   // setup stuff
   db.createCollection('hashtag', function(err, collection){
