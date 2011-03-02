@@ -1,42 +1,86 @@
 var TwitterNode = require('twitter-node').TwitterNode,
     settings = require('./settings').settings,
     sys = require('sys'),
-    winston = require('winston');
+    winston = require('winston'),
+    mongo = require('mongodb');
 
 var twit = new TwitterNode({
   user: settings.username,
   password: settings.password,
   track: settings.track
-})
+});
+var db = new mongo.Db('pulse', new mongo.Server('127.0.0.1', '27017', {}));
 
-winston.add(winston.transports.File, { filename: 'dml-tweets.log' });
-
-var setup = function () {
-  twit.headers['User-Agent'] = 'DML Game Follower';
-  
-  twit.addListener('error', function(error){
-    winston.error(error.message);
-  
-  }).addListener('tweet', function(tweet){
-    winston.info('@' + tweet.user.screen_name + ': ' + tweet.text);
-    console.dir(tweet);
-    console.dir(getHashtagsFromTweet(tweet));
-  
-  }).addListener('end', function(resp) {
-    winston.info("disconnected: " + resp.statusCode);
-  });
-}
-var begin = function () {
+var start_stream = function () {
   winston.info("Let's do this!");
-  // start streaming event loop
   twit.stream();
 }
 
 var getHashtagsFromTweet = function(tweet){
   return tweet.entities.hashtags.map(function(obj){
-    return obj.text;
+    return obj.text.toLowerCase();
   })
 }
 
-setup();
-begin();
+db.open(function(err, client){
+  var is_setup = null;
+  var hash_col = null;
+  var user_col = null;
+  
+  var continue_execution = function(){
+    if ( !(is_setup && hash_col && user_col) ) return false;
+    sys.puts('setup and found collections');
+    start_stream();
+    return true;
+  };
+  
+  var tweet_parser = function(tweet) {
+    // get current user ...
+    var user = tweet.user.screen_name;
+    
+    // ...but get tags and text from original tweeter
+    if (tweet.retweeted_status) {
+      tweet = tweet.retweeted_status
+    }
+    
+    var tags = getHashtagsFromTweet(tweet);
+    var text = tweet.text;
+
+    if (tags.length > 0) {
+      tags.forEach(function(tag){
+        var tag_entry = {'tag' : tag, 'tweet' : {'user': user, 'tweet': text } };
+        // ignore errors for now
+        hash_col.insert(tag_entry, function(err, docs){});
+      });
+    }
+    var user_entry = {'user': user, 'tweet' : {'text': text, 'tags': tags }};
+    // ignore errors for now
+    user_col.insert(user_entry, function(err, docs){});
+  }
+  
+  // setup stuff
+  db.createCollection('hashtag', function(err, collection){
+    console.log('ready with hashtag');
+    hash_col = collection;
+    continue_execution();
+  });
+  db.createCollection('user', function(err, collection){
+    console.log('ready with user');
+    user_col = collection;
+    continue_execution();
+  });
+  var prepare_stream_watcher = (function () {
+    twit.headers['User-Agent'] = 'DML Game Follower';
+    twit.addListener('error', function(error){
+      winston.error(error.message);
+    }).addListener('tweet', function(tweet){
+      winston.info('@' + tweet.user.screen_name + ': ' + tweet.text);
+      tweet_parser(tweet);
+    }).addListener('end', function(resp) {
+      winston.info("disconnected: " + resp.statusCode);
+    });
+    is_setup = true;
+    continue_execution();
+  })();
+});
+
