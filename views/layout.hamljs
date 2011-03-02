@@ -1,4 +1,5 @@
 !!! 5
 %html
   %body
+    %h1 Conference Pulse v0.1
     != body

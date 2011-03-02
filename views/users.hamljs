@@ -1,3 +1,4 @@
+%h2= "Users (" + users.length + ")"
 %ul
   - each user in users
     %li

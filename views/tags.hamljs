@@ -1,3 +1,6 @@
-%ul 
+%h2= "Tags (" + tags.length + ")"
+%ul
   - each tag in tags
-    %li= tag.tag + ' (' + tag.tweets.length + ')'
+    %li
+      %a{ href: '/tag/' + tag.tag }
+        = tag.tag + ' (' + tag.tweets.length + ')'
