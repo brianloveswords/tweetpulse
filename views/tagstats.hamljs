@@ -1,5 +1,14 @@
-
+%h2 Tags
 %ul
   - each tag in stats.tags
-    %li= tag.name + ' ('+ tag.totalTweets +' tweets, '+ tag.uniqueTweeters.length +' tweeters)'
-    
+    %li
+      %a{ href: '/tag/' + tag.name }= tag.name
+      = ' ('+ tag.totalTweets +' tweets, '+ tag.uniqueTweeters.length +' tweeters)'
+
+%h2 Users
+%ul
+  - each user in stats.users
+    %li
+      %a{ href: '/user/' + user.name }= user.name
+      = ': ' + user.tagsUsed.join(', ') + ' (' + user.tagsUsed.length + ' out of ' + stats.tags.length + ')'
+

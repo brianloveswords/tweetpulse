@@ -84,20 +84,47 @@ var getStatsForTags = function(tags, callback) {
     var tagsWithData = tagTweets.filter(function(tagTweet){
       return (tags.indexOf(tagTweet.tag) > -1);
     });
+    
+    var users = [];
     var tagStats = tagsWithData.map(function(tag){
-      var uniques = [];
+      var tagUsers = [];
       tag.tweets.forEach(function(tweet){
-        if (uniques.indexOf(tweet.screen_name) == -1) uniques.push(tweet.screen_name);
+        if (tagUsers.indexOf(tweet.screen_name) == -1) {
+          tagUsers.push(tweet.screen_name);
+        }
+        if (users.indexOf(tweet.screen_name) == -1) {
+          users.push(tweet.screen_name);
+        }
       })
       return {
         name: tag.tag,
         totalTweets: tag.tweets.length,
-        uniqueTweeters: uniques
+        uniqueTweeters: tagUsers
       };
     });
-    
-    callback({
-      tags: tagStats
+
+    getUsers(function(allUsers){
+      var filteredUsers = allUsers.filter(function(user){
+        return (users.indexOf(user.screen_name) > -1);
+      });
+      var userStats = filteredUsers.map(function(user){
+        var userTags = [];
+        user.tweets.forEach(function(tweet){
+          tweet.tags.forEach(function(tag){
+            if (userTags.indexOf(tag) == -1 && tags.indexOf(tag) > -1) userTags.push(tag);
+          })
+        })
+        return {
+          name: user.screen_name,
+          tagsUsed: userTags
+        }
+      });
+      callback({
+        tags: tagStats,
+        users: userStats.sort(function(a,b){
+          return b.tagsUsed.length - a.tagsUsed.length;
+        })
+      })
     })
   });
 }
