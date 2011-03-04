@@ -81,12 +81,12 @@ var getTag = function(name, callback){
 }
 var getStatsForTags = function(tags, callback) {
   getTags(function(tagTweets){
-    var tagsWithData = tagTweets.filter(function(tagTweet){
+    var filteredTags = tagTweets.filter(function(tagTweet){
       return (tags.indexOf(tagTweet.tag) > -1);
     });
     
     var users = [];
-    var tagStats = tagsWithData.map(function(tag){
+    var tagStats = filteredTags.map(function(tag){
       var tagUsers = [];
       tag.tweets.forEach(function(tweet){
         if (tagUsers.indexOf(tweet.screen_name) == -1) {
