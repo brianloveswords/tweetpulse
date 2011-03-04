@@ -79,8 +79,32 @@ var getTag = function(name, callback){
     }
   })
 }
+var getStatsForTags = function(tags, callback) {
+  getTags(function(tagTweets){
+    var tagsWithData = tagTweets.filter(function(tagTweet){
+      return (tags.indexOf(tagTweet.tag) > -1);
+    });
+    var tagStats = tagsWithData.map(function(tag){
+      var uniques = [];
+      tag.tweets.forEach(function(tweet){
+        if (uniques.indexOf(tweet.screen_name) == -1) uniques.push(tweet.screen_name);
+      })
+      return {
+        name: tag.tag,
+        totalTweets: tag.tweets.length,
+        uniqueTweeters: uniques
+      };
+    });
+    
+    callback({
+      tags: tagStats
+    })
+  });
+}
+
 
 exports.getTags = getTags;
 exports.getTag = getTag;
 exports.getUsers = getUsers;
 exports.getUser = getUser;
+exports.getStatsForTags = getStatsForTags;

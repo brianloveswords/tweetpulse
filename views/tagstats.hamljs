@@ -1,0 +1,5 @@
+
+%ul
+  - each tag in stats.tags
+    %li= tag.name + ' ('+ tag.totalTweets +' tweets, '+ tag.uniqueTweeters.length +' tweeters)'
+    

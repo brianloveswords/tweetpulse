@@ -3,18 +3,20 @@ var app = require('express').createServer(),
     haml = require('hamljs'),
     tweetData = require('./data');
 
+var helpers = {
+  sprintf: require('sprintf').sprintf
+}
+
 app.set('view engine', 'hamljs');
 
 app.get('/', function(req, res){
   res.render('index');
 });
-
 app.get('/users', function(req, res){
   tweetData.getUsers(function(users){
     return res.render('users', {locals: {users: users }});
   })
 });
-
 app.get('/user/:id', function(req, res){
   var user = req.params.id;
   tweetData.getTags(function(allTags){
@@ -30,7 +32,6 @@ app.get('/user/:id', function(req, res){
     });
   });
 });
-
 app.get('/tags', function(req, res){
   tweetData.getTags(function(tags){
     return res.render('tags', {locals: {tags: tags }});
@@ -42,6 +43,11 @@ app.get('/tag/:id', function(req, res){
     return res.render('tag', {locals: {tag: tag }});
   });
 });
-
+app.get('/tagstats/:tags', function(req, res){
+  var tags = req.params.tags.split('+');
+  tweetData.getStatsForTags(tags, function(stats){
+    return res.render('tagstats', {locals: { stats: stats }});
+  });
+})
 sys.puts('listening on port 3000');
 app.listen(3000);
